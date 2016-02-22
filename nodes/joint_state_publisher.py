@@ -48,6 +48,7 @@ class JointStatePublisher(Thread):
 
         # Joint positions straight from PAU
         self.pau_joint_names = rospy.get_param('~pau_joints', [])
+        self.pau_joint_positions = []
         if len(self.pau_joint_names) > 0:
             self.pau_joint_names = self.pau_joint_names.split(";")
 
@@ -117,7 +118,7 @@ class JointStatePublisher(Thread):
     def update_pau_joint_states(self, msg):
 
         with self.joint_states_lock:
-            # Head pitch devided between two joints
+            # Head pitch divided between two joints
            
             if('pitch_base_joint' in self.pau_joint_names):
                 angle = self._quaternion_to_euler['x'](msg.m_headRotation) / 2.0
