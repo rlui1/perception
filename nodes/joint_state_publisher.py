@@ -41,15 +41,19 @@ class JointStatePublisher(Thread):
         self.base_frame_id = rospy.get_param('~base_frame_id', "world")
         self.pololu_joint_names = rospy.get_param('~pololu_joints', [])
         self.pololu_joint_positions = []
+
         if len(self.pololu_joint_names) > 0:
-          self.pololu_joint_names = self.pololu_joint_names.split(";")
+            self.pololu_joint_names = self.pololu_joint_names.split(";")
         self.dyn_joint_names = rospy.get_param('~dyn_joints', None)
-        # Joint positions stright from PAU
+
+        # Joint positions straight from PAU
         self.pau_joint_names = rospy.get_param('~pau_joints', [])
         if len(self.pau_joint_names) > 0:
             self.pau_joint_names = self.pau_joint_names.split(";")
-        # By default get PAU from blender
+
+        # By default, get PAU from blender
         self.pau_topic = rospy.get_param('~pau_topic', "/blender_api/get_pau")
+
         # Initialize publisher
         self.joint_state_pub = rospy.Publisher("joint_states_combined", JointState, queue_size=10)
         self.joint_state = JointState()
@@ -63,7 +67,7 @@ class JointStatePublisher(Thread):
             self.joint_state.name = self.pololu_joint_names
             num_pololu = len(self.pololu_joint_names)
             self.pololu_joint_positions = list(repeat(0.0, num_pololu))
-           # rospy.Subscriber("pololu/motor_states", MotorStateList, self.update_pololu_joint_states)
+            # rospy.Subscriber("pololu/motor_states", MotorStateList, self.update_pololu_joint_states)
 
         if self.dyn_joint_names is not None:
             self.joint_state.name += self.dyn_joint_names
@@ -80,7 +84,8 @@ class JointStatePublisher(Thread):
             self.pau_joint_positions = list(repeat(0.0, num))
             self.joint_state.name += self.pau_joint_names
             rospy.Subscriber(self.pau_topic, pau, self.update_pau_joint_states)
-        # Quternion 2 Euler convertion
+
+        # Quternion 2 Euler conversion
         self._quaternion_to_euler = {
           'y': lambda q: math.atan2(
             -2*(q.z*q.x-q.w*q.y),
@@ -94,7 +99,6 @@ class JointStatePublisher(Thread):
             q.w**2+q.y**2-q.z**2-q.x**2
           )
         }
-
 
 
     def update_dyn_joint_state(self, msg):
@@ -122,10 +126,11 @@ class JointStatePublisher(Thread):
             if('pitch_neck_joint' in self.pau_joint_names):
                 angle = self._quaternion_to_euler['x'](msg.m_headRotation) / 2.0
                 self.pau_joint_positions[self.pau_joint_names.index('pitch_neck_joint')] = angle
-            # One Yaw Joint. The Yaw for head and eyes are inverted  compared to URDF
+            # One Yaw Joint. The Yaw for head and eyes are inverted compared to URDF
             if('yaw_joint' in self.pau_joint_names):
                 angle = -self._quaternion_to_euler['z'](msg.m_headRotation)
                 self.pau_joint_positions[self.pau_joint_names.index('yaw_joint')] = angle
+
             # Single eyes pitch joint
             if('Eyes_Pitch' in self.pau_joint_names):
                 angle = msg.m_eyeGazeLeftPitch
@@ -137,6 +142,7 @@ class JointStatePublisher(Thread):
                 angle = -msg.m_eyeGazeLeftYaw
                 self.pau_joint_positions[self.pau_joint_names.index('Eye_R')] = angle
             print self.pau_joint_positions
+
     def run(self):
         while not rospy.is_shutdown():
             with self.joint_states_lock:
@@ -151,6 +157,7 @@ class JointStatePublisher(Thread):
 
                 elif self.pololu_joint_names is not None:
                     self.joint_state.position = self.pololu_joint_positions
+
                 # Add PAU positions
                 self.joint_state.position = self.pau_joint_positions
 
