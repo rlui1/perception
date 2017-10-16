@@ -28,7 +28,7 @@ from threading import Thread, RLock
 #from ros_pololu.msg import MotorStateList
 from dynamixel_msgs.msg import JointState as DynamixelJointState
 from itertools import repeat 
-from pau2motors.msg import pau
+from hr_msgs.msg import pau
 import math
 import logging
 
