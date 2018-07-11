@@ -22,15 +22,15 @@
 
 __author__ = 'Alex van der Peet, James Diprose'
 
-import rospy
-from sensor_msgs.msg import JointState
-from threading import Thread, RLock
-#from ros_pololu.msg import MotorStateList
-from dynamixel_msgs.msg import JointState as DynamixelJointState
-from itertools import repeat 
-from pau2motors.msg import pau
-import math
 import logging
+import math
+from threading import Thread, RLock
+
+import rospy
+from dynamixel_msgs.msg import JointState as DynamixelJointState
+from hr_msgs.msg import pau
+from itertools import repeat 
+from sensor_msgs.msg import JointState
 
 logger = logging.getLogger('hr.perception.joint_state_publisher')
 

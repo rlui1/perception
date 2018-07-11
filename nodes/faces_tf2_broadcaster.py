@@ -20,7 +20,7 @@
 
 import rospy
 import tf
-from pi_face_tracker.msg import *
+from hr_msgs.msg import PiVisionFaces
 from geometry_msgs.msg import Quaternion
 from geometry_msgs.msg import TransformStamped
 from geometry_msgs.msg import PointStamped
@@ -42,15 +42,15 @@ class FacesPublisher:
         # angle for faces to be marked as same, to be refined in future
         #self.max_angle = rospy.get_param('max_angle', 0.085)
         rospy.Subscriber('camera/face_locations',
-                     pi_face_tracker.msg.Faces,
+                     PiVisionFaces,
                      self.handle_faces)
 
         rospy.Subscriber('rs_camera/face_locations',
-                     pi_face_tracker.msg.Faces,
+                     PiVisionFaces,
                      self.handle_rs_faces)
 
         rospy.Subscriber('eye_camera/face_locations',
-                     pi_face_tracker.msg.Faces,
+                     PiVisionFaces,
                      self.handle_eye_faces)
         # Last faces gotten from body camera
         self.last_faces = {}
