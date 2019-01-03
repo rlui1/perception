@@ -105,3 +105,4 @@ Broadcast `/tf` data from face tracking.
    - Eye Camera on `/dev/video1`
  * Run face tracking: `roslaunch perception tracker.launch`
  * Run the node: `roslaunch perception display.launch`
+##### Copyright (c) 2013-2018 Hanson Robotics, Ltd. 
